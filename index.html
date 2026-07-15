@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Chandra — Deployment Roadmap Canvas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0c0f;
+  --surface:#131317;
+  --surface-2:#1a1a1f;
+  --surface-3:#222228;
+  --line:#2a2a30;
+  --line-soft:#1e1e24;
+  --ink:#e8e8ec;
+  --muted:#8a8a92;
+  --faint:#5b5b63;
+  --gold:#D3A518;
+  --gold-dim:rgba(211,165,24,0.15);
+  --gold-soft:rgba(211,165,24,0.08);
+  --accent:#4c8dff;
+  --green:#3fb950;
+  --amber:#e3a008;
+  --red:#ff2d2d;
+  --grey:#6b6b73;
+  --blue:#4c8dff;
+  --done:var(--green);
+  --in-progress:var(--amber);
+  --next:var(--blue);
+  --planned:var(--grey);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased;padding:0;line-height:1.5}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:50;background:rgba(12,12,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav .brand{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px;letter-spacing:.04em}
+.nav .brand b{color:var(--gold)}
+.nav .links{display:flex;gap:20px;font-size:12px;color:var(--muted)}
+.nav .links a{color:var(--muted);text-decoration:none;transition:color .15s;cursor:pointer}
+.nav .links a:hover{color:var(--ink)}
+.nav .badge{font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border:1px solid var(--line);border-radius:4px;color:var(--muted)}
+
+.wrap{max-width:1320px;margin:0 auto;padding:0 24px}
+
+/* HERO */
+.hero{padding:64px 0 40px;border-bottom:1px solid var(--line)}
+.hero .eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+.hero h1{font-size:clamp(28px,4vw,48px);font-weight:600;line-height:1.05;margin:0 0 12px;letter-spacing:-.02em}
+.hero h1 .hl{color:var(--gold)}
+.hero .sub{font-size:15px;color:var(--muted);max-width:700px;line-height:1.55;margin:0 0 28px}
+.hero .meta{display:flex;gap:20px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.hero .meta .lg{display:flex;align-items:center;gap:7px}
+.hero .meta .sw{width:10px;height:10px;border-radius:2px}
+
+/* TIMELINE SECTION */
+.tl-section{padding:48px 0 40px}
+.tl-section h2{font-size:22px;font-weight:600;margin:0 0 6px}
+.tl-section .section-sub{font-size:14px;color:var(--muted);margin:0 0 36px}
+
+/* TIMELINE GRID */
+.tl-wrapper{overflow-x:auto;padding-bottom:16px}
+.tl-table{min-width:900px;position:relative}
+
+/* Month headers */
+.months-row{display:grid;grid-template-columns:200px repeat(12,1fr);gap:0;margin-bottom:4px;position:sticky;top:52px;z-index:10;background:var(--bg);padding:8px 0;border-bottom:1px solid var(--line)}
+.months-row .spacer{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+.months-row .m{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;text-align:center;color:var(--muted);position:relative}
+.months-row .m.now{color:var(--gold);font-weight:700}
+.months-row .m.now::after{content:'▼';display:block;font-size:8px;color:var(--gold);margin-top:2px}
+
+/* Phase labels */
+.phase-label{grid-column:2/span 12;display:grid;grid-template-columns:subgrid;margin:20px 0 4px}
+.phase-label .pl{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);padding:4px 0;border-bottom:1px dashed var(--line-soft)}
+
+/* Group headers */
+.group-header{display:grid;grid-template-columns:200px repeat(12,1fr);gap:0;margin:20px 0 4px;padding:8px 0;border-bottom:1px solid var(--line-soft)}
+.group-header .gh{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.group-header .gh-accent{color:var(--gold)}
+
+/* Row */
+.tl-row{display:grid;grid-template-columns:200px repeat(12,1fr);gap:0;padding:10px 0;border-bottom:1px solid var(--line-soft);transition:background .15s;position:relative}
+.tl-row:hover{background:rgba(255,255,255,0.02)}
+
+.tl-row .label{font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px}
+.tl-row .label .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.tl-row .label .status-dot.done{background:var(--done)}
+.tl-row .label .status-dot.in-progress{background:var(--in-progress);animation:pulse 2s ease-in-out infinite}
+.tl-row .label .status-dot.next{background:var(--next)}
+.tl-row .label .status-dot.planned{background:var(--planned)}
+.tl-row .label .sub{font-size:10px;color:var(--faint);font-weight:400;display:block;margin-top:1px}
+
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* Bar */
+.tl-row .bar-wrap{position:relative;grid-column:span 12;display:flex;align-items:center}
+.tl-row .bar{height:22px;border-radius:4px;position:absolute;display:flex;align-items:center;padding:0 10px;font-family:'JetBrains Mono',monospace;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .2s;cursor:pointer}
+.tl-row .bar:hover{opacity:.85}
+.tl-row .bar.done{background:rgba(63,185,80,.18);border:1px solid rgba(63,185,80,.35);color:var(--done)}
+.tl-row .bar.in-progress{background:rgba(227,160,8,.18);border:1px solid rgba(227,160,8,.35);color:var(--amber)}
+.tl-row .bar.next{background:rgba(76,141,255,.12);border:1px solid rgba(76,141,255,.25);color:var(--blue)}
+.tl-row .bar.planned{background:rgba(107,107,115,.12);border:1px solid rgba(107,107,115,.25);color:var(--grey)}
+
+/* Milestone markers */
+.milestone-row{display:grid;grid-template-columns:200px repeat(12,1fr);gap:0;padding:6px 0;border-bottom:1px solid var(--line-soft)}
+.milestone-row .label{font-size:11px;color:var(--faint);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px}
+.milestone-row .bar-wrap{position:relative;grid-column:span 12;display:flex;align-items:center}
+.milestone-row .milestone{position:absolute;display:flex;flex-direction:column;align-items:center;transform:translateX(-50%);top:-8px}
+.milestone-row .milestone .diamond{width:10px;height:10px;background:var(--gold);transform:rotate(45deg);border-radius:1px}
+.milestone-row .milestone .ml{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--gold);margin-top:4px;white-space:nowrap;text-align:center;line-height:1.3}
+
+/* NOW marker */
+.now-line{position:absolute;top:0;bottom:0;width:2px;background:var(--gold);z-index:5;pointer-events:none}
+.now-line::before{content:'WE ARE HERE — MONTH 3';position:absolute;top:-28px;left:50%;transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;color:var(--gold);background:var(--bg);padding:2px 10px;border:1px solid var(--gold);border-radius:4px;white-space:nowrap;letter-spacing:.04em}
+.now-line .glow{position:absolute;top:0;left:-4px;width:10px;height:100%;background:radial-gradient(ellipse at center,var(--gold-dim),transparent 70%);pointer-events:none}
+
+/* WE ARE HERE badge */
+.where-we-stand{margin:48px 0;padding:28px 32px;border:1px solid var(--gold-dim);border-radius:8px;background:linear-gradient(180deg,var(--gold-soft),transparent)}
+.where-we-stand .wws-head{display:flex;align-items:center;gap:16px;margin-bottom:16px}
+.where-we-stand .wws-head .big{font-size:36px;font-weight:700;color:var(--gold);font-family:'JetBrains Mono',monospace;line-height:1}
+.where-we-stand .wws-head .txt{font-size:16px;font-weight:600;color:var(--ink)}
+.where-we-stand .wws-body{font-size:14px;color:var(--muted);line-height:1.6}
+.where-we-stand .wws-body .stat{display:inline-flex;align-items:center;gap:6px;background:var(--surface-2);padding:4px 12px;border-radius:4px;border:1px solid var(--line);margin:2px 4px;font-family:'JetBrains Mono',monospace;font-size:12px}
+.where-we-stand .wws-body .stat .num{font-weight:700;color:var(--ink)}
+
+/* Phase summary cards */
+.phases-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:40px 0}
+.phase-card{border:1px solid var(--line);border-radius:8px;padding:20px;background:var(--surface);position:relative;overflow:hidden}
+.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.phase-card.p0::before{background:var(--green)}
+.phase-card.p1::before{background:var(--amber)}
+.phase-card.p2::before{background:var(--blue)}
+.phase-card.p3::before{background:var(--grey)}
+.phase-card .pc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.phase-card .pc-phase{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.phase-card .pc-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)}
+.phase-card h3{font-size:15px;font-weight:600;margin:0 0 10px}
+.phase-card ul{margin:0;padding:0;list-style:none}
+.phase-card ul li{font-size:12px;color:var(--muted);padding:4px 0;padding-left:14px;position:relative;line-height:1.4}
+.phase-card ul li::before{content:'→';position:absolute;left:0;color:var(--faint)}
+.phase-card .pc-stat{font-family:'JetBrains Mono',monospace;font-size:11px;margin-top:12px;padding-top:10px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between}
+.phase-card .pc-stat .count{color:var(--muted)}
+.phase-card .pc-stat .pct{font-weight:600}
+.phase-card.p0 .pc-stat .pct{color:var(--green)}
+.phase-card.p1 .pc-stat .pct{color:var(--amber)}
+.phase-card.p2 .pc-stat .pct{color:var(--blue)}
+.phase-card.p3 .pc-stat .pct{color:var(--grey)}
+
+/* Footer */
+footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--faint);flex-wrap:wrap;gap:12px}
+
+@media(max-width:768px){
+  .hero{padding:40px 0 28px}
+  .phases-grid{grid-template-columns:1fr}
+  .where-we-stand{padding:20px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="brand">INTELLIGENZ<b>IT</b> <span style="color:var(--faint);font-weight:400;margin-left:8px">/ chandra roadmap</span></div>
+  <div class="links">
+    <a onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">Timeline</a>
+    <a onclick="document.getElementById('phases').scrollIntoView({behavior:'smooth'})">Phases</a>
+    <a onclick="document.getElementById('standing').scrollIntoView({behavior:'smooth'})">Where we are</a>
+  </div>
+  <div class="badge">Jul 15, 2026</div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Deployment Roadmap / Strategic Canvas</div>
+    <h1>Chandra — <span class="hl">where each component</span> delivers value, month by month</h1>
+    <p class="sub">Every component mapped to when it ships. Use this to anchor the Smart Europe conversation: what's done, what's building now, what's next.</p>
+    <div class="meta">
+      <div class="lg"><span class="sw" style="background:var(--green)"></span>Done (M1-M3)</div>
+      <div class="lg"><span class="sw" style="background:var(--amber)"></span>In progress (M4-M6)</div>
+      <div class="lg"><span class="sw" style="background:var(--blue)"></span>Next quarter (M7-M9)</div>
+      <div class="lg"><span class="sw" style="background:var(--grey)"></span>Planned (M10+)</div>
+    </div>
+  </div>
+</section>
+
+<section class="tl-section" id="timeline">
+  <div class="wrap">
+    <h2>Timeline canvas</h2>
+    <p class="section-sub">Each bar shows when a component starts delivering. Click any bar for detail.</p>
+    <div class="tl-wrapper">
+      <div class="tl-table" id="tl-table">
+
+        <!-- Month headers -->
+        <div class="months-row">
+          <div class="spacer">Component</div>
+          <div class="m">M1</div>
+          <div class="m">M2</div>
+          <div class="m now">M3</div>
+          <div class="m">M4</div>
+          <div class="m">M5</div>
+          <div class="m">M6</div>
+          <div class="m">M7</div>
+          <div class="m">M8</div>
+          <div class="m">M9</div>
+          <div class="m">M10</div>
+          <div class="m">M11</div>
+          <div class="m">M12</div>
+        </div>
+
+        <!-- ===== INFRASTRUCTURE ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">Infrastructure</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>AWS eu-central-1 (Frankfurt)<span class="sub">Region setup, VPC, IAM, RDS</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>Ollama on EC2 (Prod)<span class="sub">Gemma/DeepSeek air-gapped deployment</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:16.66%;grid-column:span 2">M1-M2</div><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>Bedrock→Ollama swap<span class="sub">ChatBedrockConverse→ChatOpenAI</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:16.66%;grid-column:span 2">M1-M2</div><div class="bar in-progress" style="left:16.66%;width:16.66%;grid-column:span 2">M3-M4</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Multi-cloud (Azure/GCP)<span class="sub">Extend beyond AWS</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+
+        <!-- ===== CORE ENGINE ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">Core Engine</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>LangGraph orchestration<span class="sub">StateGraph, conditional edges, checkpointing</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>5 KRA detectors<span class="sub">Cost, security, compliance, performance, reliability</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>AWS tool set<span class="sub">EC2, S3, IAM, CloudTrail, Cost Explorer</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Memory &amp; persistence<span class="sub">Postgres, episodic recall, audit trail</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>HITL approval gates<span class="sub">interrupt() for destructive actions</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Self-healing pipeline<span class="sub">Auto-retry, fallback, deterministic degrade</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+
+        <!-- ===== AGENTS ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">Agents &amp; Workers</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Observation Agent<span class="sub">CloudWatch, logs, monitoring ingestion</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Classification Agent<span class="sub">KRA triage, intent routing</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Resolution Engine<span class="sub">Auto-fix known issues, runbook execution</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Notification Agent<span class="sub">Slack/Teams/Email delivery</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>SIM Activation Agent<span class="sub">6-step LangGraph for Smart Europe</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>HR Agents (Ops + Recruit)<span class="sub">Internal proof for Sai</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>RCA Agent<span class="sub">Root cause analysis for complex tickets</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:25%;width:25%;grid-column:span 3">M4-M6</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>Automation Executor<span class="sub">Run approved scripts/Terraform/runbooks</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:25%;width:25%;grid-column:span 3">M4-M6</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Planning Agent<span class="sub">Resolution plan generation</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:41.66%;width:25%;grid-column:span 3">M6-M8</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Validation Agent<span class="sub">Verification after automation</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Reporting Agent<span class="sub">Audit, metrics, executive summaries</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot planned"></span>Knowledge Retrieval Agent<span class="sub">Runbooks, KB, docs vector search</span></div>
+          <div class="bar-wrap"><div class="bar planned" style="left:66.66%;width:25%;grid-column:span 3">M9-M11</div></div>
+        </div>
+
+        <!-- ===== INTEGRATION & DELIVERY ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">Integration &amp; Delivery</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Jira ticket ingestion<span class="sub">Read, update, close tickets</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>Streamlit dashboard<span class="sub">Worker status, KRA scores, action log</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>DPI Scoreboard v2<span class="sub">3-tab interactive: Scores / Config / Formula</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:25%;width:25%;grid-column:span 3">M4-M6</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Next.js full dashboard<span class="sub">Agent dashboards, real-time streaming</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Multi-tenant client portal<span class="sub">Per-client isolation, white-label</span></div>
+          <div class="bar-wrap"><div class="bar planned" style="left:66.66%;width:33.33%;grid-column:span 4">M9-M12</div></div>
+        </div>
+
+        <!-- ===== DPI SCORING ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">DPI (Digital Performance Index)</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot done"></span>DPI engine (v1)<span class="sub">Basic 0-100 scoring</span></div>
+          <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot in-progress"></span>DPI v2 — 7 dimensions<span class="sub">Prod, Quality, Execution, Governance, Risk, Validation, Cost</span></div>
+          <div class="bar-wrap"><div class="bar in-progress" style="left:25%;width:25%;grid-column:span 3">M4-M6</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot next"></span>Real-signal DPI<span class="sub">Agent telemetry, not synthetic data</span></div>
+          <div class="bar-wrap"><div class="bar next" style="left:50%;width:25%;grid-column:span 3">M7-M9</div></div>
+        </div>
+
+        <!-- ===== FUTURE WORKERS ===== -->
+        <div class="group-header">
+          <div class="gh gh-accent">Future Digital Workers</div>
+        </div>
+
+        <div class="tl-row">
+          <div class="label"><span class="status-dot planned"></span>Vajra — SOC Analyst<span class="sub">Threat detection, incident response</span></div>
+          <div class="bar-wrap"><div class="bar planned" style="left:75%;width:25%;grid-column:span 3">M10-M12</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot planned"></span>Mira — HR Ops<span class="sub">Onboarding, policy, compliance</span></div>
+          <div class="bar-wrap"><div class="bar planned" style="left:75%;width:25%;grid-column:span 3">M10-M12</div></div>
+        </div>
+        <div class="tl-row">
+          <div class="label"><span class="status-dot planned"></span>Avani — Clinical Trials<span class="sub">Site tracking, data quality, safety signals</span></div>
+          <div class="bar-wrap"><div class="bar planned" style="left:83.33%;width:16.66%;grid-column:span 2">M11-M12</div></div>
+        </div>
+
+        <!-- Milestone row -->
+        <div class="milestone-row">
+          <div class="label">⦿ Milestones</div>
+          <div class="bar-wrap">
+            <div class="milestone" style="left:16.66%"><div class="diamond"></div><div class="ml">Smart Europe<br/>kickoff</div></div>
+            <div class="milestone" style="left:41.66%"><div class="diamond"></div><div class="ml">30% automation<br/>live</div></div>
+            <div class="milestone" style="left:66.66%"><div class="diamond"></div><div class="ml">Full Digital<br/>Worker</div></div>
+            <div class="milestone" style="left:91.66%"><div class="diamond"></div><div class="ml">Product<br/>catalogue</div></div>
+          </div>
+        </div>
+
+      </div><!-- /tl-table -->
+    </div><!-- /tl-wrapper -->
+  </div>
+</section>
+
+<section id="phases">
+  <div class="wrap">
+    <div class="phases-grid">
+      <div class="phase-card p0">
+        <div class="pc-head"><div class="pc-phase">Phase 0</div><div class="pc-date">M1-M3</div></div>
+        <h3>Foundation</h3>
+        <ul>
+          <li>Chandra PoC delivered (Regeneron)</li>
+          <li>5 KRA pipeline built</li>
+          <li>Local LLM pivot (Bedrock→Ollama)</li>
+          <li>AWS eu-central-1 infra setup</li>
+          <li>Ticket ingestion + resolution engine</li>
+          <li>Streamlit dashboard live</li>
+          <li>Smart Europe scoped</li>
+        </ul>
+        <div class="pc-stat"><span class="count">12 components</span><span class="pct">100% done</span></div>
+      </div>
+      <div class="phase-card p1">
+        <div class="pc-head"><div class="pc-phase">Phase 1</div><div class="pc-date">M4-M6</div></div>
+        <h3>Production</h3>
+        <ul>
+          <li>SIM Activation Agent (Smart EU)</li>
+          <li>HR Agents (internal proof)</li>
+          <li>Ollama production hardening</li>
+          <li>RCA Agent + Automation Executor</li>
+          <li>HITL approval gates</li>
+          <li>DPI Scoreboard v2</li>
+          <li>30% ticket automation live</li>
+        </ul>
+        <div class="pc-stat"><span class="count">8 components</span><span class="pct">In progress</span></div>
+      </div>
+      <div class="phase-card p2">
+        <div class="pc-head"><div class="pc-phase">Phase 2</div><div class="pc-date">M7-M9</div></div>
+        <h3>Scale</h3>
+        <ul>
+          <li>10 Digital Worker agents complete</li>
+          <li>Multi-cloud (Azure/GCP)</li>
+          <li>Self-healing pipeline</li>
+          <li>Next.js full dashboard</li>
+          <li>Real-signal DPI scoring</li>
+          <li>Planning + Validation + Reporting agents</li>
+          <li>50%+ automation rate</li>
+        </ul>
+        <div class="pc-stat"><span class="count">7 components</span><span class="pct">Next quarter</span></div>
+      </div>
+      <div class="phase-card p3">
+        <div class="pc-head"><div class="pc-phase">Phase 3</div><div class="pc-date">M10-M12+</div></div>
+        <h3>Productise</h3>
+        <ul>
+          <li>Knowledge Retrieval Agent (RAG)</li>
+          <li>Multi-tenant client portal</li>
+          <li>Vajra (SOC Digital Worker)</li>
+          <li>Mira (HR Digital Worker)</li>
+          <li>Avani (Clinical Trials Worker)</li>
+          <li>Rent/Consult/Implement models</li>
+          <li>Full product catalogue</li>
+        </ul>
+        <div class="pc-stat"><span class="count">6 components</span><span class="pct">Planned</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="where-we-stand" id="standing">
+  <div class="wrap" style="width:100%">
+    <div class="wws-head">
+      <div class="big">M3</div>
+      <div class="txt">Where we are standing</div>
+    </div>
+    <div class="wws-body">
+      <b>Month 3 of 12 — Foundation is built.</b> Chandra's core pipeline (LangGraph + 5 KRA detectors + AWS tool set + local LLM) is shipping. Smart Europe is scoped, SIM Activation is in build, HR agents are being constructed as internal proof. The 30% automation target for the Sunday pitch is on track.
+      <br><br>
+      <span class="stat"><span class="num">12</span> components done</span>
+      <span class="stat"><span class="num" style="color:var(--amber)">8</span> in progress</span>
+      <span class="stat"><span class="num" style="color:var(--blue)">7</span> next quarter</span>
+      <span class="stat"><span class="num" style="color:var(--grey)">6</span> planned</span>
+      <br><br>
+      <span style="color:var(--gold);font-weight:500">Immediate focus (M4-M6):</span> SIM Activation Agent → Smart Europe delivery → DPI Scoreboard v2 → Ollama production → HR Agents proof for Sai.
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap" style="width:100%;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <span>INTELLIGENZIT · CHANDRA ROADMAP · INTERNAL</span>
+    <span>FOUNDATION → PRODUCTION → SCALE → PRODUCTISE</span>
+  </div>
+</footer>
+
+<script>
+// NOW line position — calculated from M3 (3rd of 12 columns)
+(function(){
+  const table = document.getElementById('tl-table');
+  const nowCol = 3; // M3 is the 3rd column (0-indexed: col 2 if we include the spacer)
+  const colWidth = 1/12 * 100; // each month column = 8.33%
+
+  const nowLine = document.createElement('div');
+  nowLine.className = 'now-line';
+  const spacerWidth = 200; // px — label column
+  // Position at the start of M3 column
+  nowLine.style.left = (colWidth * 2) + '%'; // M3 = column index 2 (0-based in the 12-col grid)
+  table.appendChild(nowLine);
+
+  // Hover tooltip for bars
+  document.querySelectorAll('.tl-row .bar').forEach(bar => {
+    bar.addEventListener('mouseenter', function(e) {
+      this.style.zIndex = '10';
+      this.style.opacity = '1';
+    });
+    bar.addEventListener('mouseleave', function(e) {
+      this.style.zIndex = '1';
+      this.style.opacity = '';
+    });
+  });
+})();
+</script>
+</body>
+</html>
