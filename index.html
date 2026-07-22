@@ -27,6 +27,9 @@
   --red:#ff2d2d;
   --grey:#6b6b73;
   --blue:#4c8dff;
+  --purple:#a78bfa;
+  --teal:#2dd4bf;
+  --pink:#f472b6;
   --done:var(--green);
   --in-progress:var(--amber);
   --next:var(--blue);
@@ -57,6 +60,51 @@ body{font-family:'Geist',system-ui,sans-serif;-webkit-font-smoothing:antialiased
 .hero .meta{display:flex;gap:20px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .hero .meta .lg{display:flex;align-items:center;gap:7px}
 .hero .meta .sw{width:10px;height:10px;border-radius:2px}
+
+/* ===== ARCHITECTURE ===== */
+.arch-section{padding:48px 0 40px;border-bottom:1px solid var(--line)}
+.arch-section h2{font-size:22px;font-weight:600;margin:0 0 6px}
+.arch-section .section-sub{font-size:14px;color:var(--muted);margin:0 0 36px}
+
+.arch-diagram{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:32px;overflow-x:auto}
+.arch-layers{display:flex;flex-direction:column;gap:0;min-width:800px;position:relative}
+
+/* Layer labels on the left */
+.arch-layer{display:flex;align-items:stretch;position:relative;min-height:70px}
+.arch-layer + .arch-layer{border-top:1px solid var(--line-soft)}
+.arch-layer-label{width:140px;flex-shrink:0;display:flex;flex-direction:column;justify-content:center;padding:16px 12px 16px 0;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);border-right:1px solid var(--line-soft);margin-right:16px}
+.arch-layer-label .l1{font-size:11px;font-weight:600;text-transform:none;color:var(--ink);letter-spacing:0;margin-bottom:2px}
+.arch-layer-label .l2{color:var(--faint);line-height:1.4}
+.arch-layer-content{flex:1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 0}
+
+.arch-box{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:10px 14px;font-size:12px;position:relative;transition:border-color .2s,background .2s;cursor:default}
+.arch-box:hover{border-color:var(--muted);background:var(--surface-3)}
+.arch-box .ab-title{font-weight:600;font-size:13px;color:var(--ink);white-space:nowrap}
+.arch-box .ab-sub{font-size:10px;color:var(--muted);margin-top:2px;white-space:nowrap}
+.arch-box .ab-badge{display:inline-block;font-size:8px;font-family:'JetBrains Mono',monospace;padding:1px 6px;border-radius:3px;margin-left:6px;vertical-align:middle}
+.arch-box .ab-badge.done{background:rgba(63,185,80,.2);color:var(--green);border:1px solid rgba(63,185,80,.3)}
+.arch-box .ab-badge.wip{background:rgba(227,160,8,.2);color:var(--amber);border:1px solid rgba(227,160,8,.3)}
+.arch-box .ab-badge.next{background:rgba(76,141,255,.15);color:var(--blue);border:1px solid rgba(76,141,255,.25)}
+.arch-box .ab-badge.planned{background:rgba(107,107,115,.15);color:var(--grey);border:1px solid rgba(107,107,115,.25)}
+
+/* Colored box borders by layer */
+.arch-box.layer-input{border-left:3px solid var(--teal)}
+.arch-box.layer-core{border-left:3px solid var(--gold)}
+.arch-box.layer-llm{border-left:3px solid var(--purple)}
+.arch-box.layer-agent{border-left:3px solid var(--blue)}
+.arch-box.layer-delivery{border-left:3px solid var(--green)}
+.arch-box.layer-infra{border-left:3px solid var(--pink)}
+
+/* Flow arrows between layers */
+.arch-flow-row{display:flex;align-items:center;justify-content:center;padding:2px 0;position:relative;height:24px}
+.arch-flow-row .arrow{font-size:10px;color:var(--faint);font-family:'JetBrains Mono',monospace;display:flex;align-items:center;gap:6px}
+.arch-flow-row .arrow-line{width:48px;height:1px;background:var(--line);position:relative}
+.arch-flow-row .arrow-line::after{content:'';position:absolute;right:0;top:-3px;border-left:6px solid var(--faint);border-top:3.5px solid transparent;border-bottom:3.5px solid transparent}
+
+/* Architecture legend */
+.arch-legend{display:flex;gap:24px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.arch-legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted)}
+.arch-legend-item .swatch{width:3px;height:20px;border-radius:2px;flex-shrink:0}
 
 /* TIMELINE SECTION */
 .tl-section{padding:48px 0 40px}
@@ -158,31 +206,267 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
   .hero{padding:40px 0 28px}
   .phases-grid{grid-template-columns:1fr}
   .where-we-stand{padding:20px}
+  .arch-layer{flex-direction:column}
+  .arch-layer-label{width:100%;border-right:none;border-bottom:1px solid var(--line-soft);padding:10px 0;margin-right:0}
 }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="brand">INTELLIGENZ<b>IT</b> <span style="color:var(--faint);font-weight:400;margin-left:8px">/ chandra roadmap</span></div>
+  <div class="brand">INTELLIGENZ<b>IT</b> <span style="color:var(--faint);font-weight:400;margin-left:8px">/ chandra canvas</span></div>
   <div class="links">
+    <a onclick="document.getElementById('architecture').scrollIntoView({behavior:'smooth'})">Architecture</a>
     <a onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">Timeline</a>
     <a onclick="document.getElementById('phases').scrollIntoView({behavior:'smooth'})">Phases</a>
     <a onclick="document.getElementById('standing').scrollIntoView({behavior:'smooth'})">Where we are</a>
   </div>
-  <div class="badge">Jul 15, 2026</div>
+  <div class="badge">Jul 22, 2026</div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
-    <div class="eyebrow">Deployment Roadmap / Strategic Canvas</div>
-    <h1>Chandra — <span class="hl">where each component</span> delivers value, month by month</h1>
-    <p class="sub">Every component mapped to when it ships. Use this to anchor the Smart Europe conversation: what's done, what's building now, what's next.</p>
+    <div class="eyebrow">Strategic Canvas / Architecture + Roadmap</div>
+    <h1>Chandra — <span class="hl">architecture</span> &amp; <span class="hl">deployment timeline</span></h1>
+    <p class="sub">How the system is built, how components connect, and when each one delivers value. The full picture for PVR: architecture today + roadmap ahead.</p>
     <div class="meta">
       <div class="lg"><span class="sw" style="background:var(--green)"></span>Done (M1-M3)</div>
       <div class="lg"><span class="sw" style="background:var(--amber)"></span>In progress (M4-M6)</div>
       <div class="lg"><span class="sw" style="background:var(--blue)"></span>Next quarter (M7-M9)</div>
       <div class="lg"><span class="sw" style="background:var(--grey)"></span>Planned (M10+)</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ARCHITECTURE SECTION ===== -->
+<section class="arch-section" id="architecture">
+  <div class="wrap">
+    <h2>System architecture</h2>
+    <p class="section-sub">How the Chandra platform is layered — from ticket intake to execution to dashboards.</p>
+
+    <div class="arch-diagram">
+      <div class="arch-layers">
+
+        <!-- LAYER 1: INPUT / TICKET INGESTION -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Ticket Intake</div>
+            <div class="l2">Where tickets enter the system</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-input">
+              <div class="ab-title">Jira / ServiceNow <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Webhook &amp; API ingestion</div>
+            </div>
+            <div class="arch-box layer-input">
+              <div class="ab-title">Retool (Smart EU) <span class="ab-badge wip">Integrating</span></div>
+              <div class="ab-sub">SIM activation requests</div>
+            </div>
+            <div class="arch-box layer-input">
+              <div class="ab-title">Email / Chat <span class="ab-badge planned">Planned</span></div>
+              <div class="ab-sub">Slack, Teams, email intake</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow arrow -->
+        <div class="arch-flow-row">
+          <div class="arrow">
+            <span class="arrow-line"></span>
+            Ticket routed to Chandra
+            <span class="arrow-line" style="transform:scaleX(-1)"></span>
+          </div>
+        </div>
+
+        <!-- LAYER 2: CHANDRA CORE -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Chandra Core</div>
+            <div class="l2">LangGraph orchestration engine</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-core">
+              <div class="ab-title">Observation Agent <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">CloudWatch, logs, monitoring</div>
+            </div>
+            <div class="arch-box layer-core">
+              <div class="ab-title">Classification Agent <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">KRA triage &amp; intent routing</div>
+            </div>
+            <div class="arch-box layer-core">
+              <div class="ab-title">5 KRA Detectors <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Cost, Security, Compliance, Perf, Reliability</div>
+            </div>
+            <div class="arch-box layer-core">
+              <div class="ab-title">Resolution Engine <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Auto-fix known issues</div>
+            </div>
+            <div class="arch-box layer-core">
+              <div class="ab-title">KRA Auto-Update <span class="ab-badge wip">Integrating</span></div>
+              <div class="ab-sub">LLM fallback → KRA diff → commit</div>
+            </div>
+            <div class="arch-box layer-core">
+              <div class="ab-title">HITL Approval Gate <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">interrupt() for destructive actions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow arrow -->
+        <div class="arch-flow-row">
+          <div class="arrow">
+            <span class="arrow-line"></span>
+            KRA gap → Local LLM query
+            <span class="arrow-line" style="transform:scaleX(-1)"></span>
+          </div>
+        </div>
+
+        <!-- LAYER 3: LOCAL LLM -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Local LLM</div>
+            <div class="l2">Air-gapped intelligence layer</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-llm">
+              <div class="ab-title">Ollama (EC2) <span class="ab-badge wip">Productionizing</span></div>
+              <div class="ab-sub">Llama 3.1 70B / Qwen 2.5 72B</div>
+            </div>
+            <div class="arch-box layer-llm">
+              <div class="ab-title">LLM Adapter Layer <span class="ab-badge wip">Integrating</span></div>
+              <div class="ab-sub">Bedrock→Ollama swap (OpenAI-compatible)</div>
+            </div>
+            <div class="arch-box layer-llm">
+              <div class="ab-title">Runbook KB <span class="ab-badge planned">Planned</span></div>
+              <div class="ab-sub">Vector store for past resolutions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow arrow -->
+        <div class="arch-flow-row">
+          <div class="arrow">
+            <span class="arrow-line"></span>
+            Agent executes on infrastructure
+            <span class="arrow-line" style="transform:scaleX(-1)"></span>
+          </div>
+        </div>
+
+        <!-- LAYER 4: AGENTS & WORKERS -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Agents &amp; Workers</div>
+            <div class="l2">Domain-specific Digital Workers</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-agent">
+              <div class="ab-title">SIM Activation Agent <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">LangGraph 6-step flow (Smart EU)</div>
+            </div>
+            <div class="arch-box layer-agent">
+              <div class="ab-title">Card Decoupling Agent <span class="ab-badge next">M6+</span></div>
+              <div class="ab-sub">Legacy card system migration</div>
+            </div>
+            <div class="arch-box layer-agent">
+              <div class="ab-title">HR Agents (ATS+Scorer) <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">Profile intake + JD scoring</div>
+            </div>
+            <div class="arch-box layer-agent">
+              <div class="ab-title">RCA Agent <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">Root cause for complex tickets</div>
+            </div>
+            <div class="arch-box layer-agent">
+              <div class="ab-title">Automation Executor <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">Terraform/runbook execution</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow arrow -->
+        <div class="arch-flow-row">
+          <div class="arrow">
+            <span class="arrow-line"></span>
+            Results published to dashboards
+            <span class="arrow-line" style="transform:scaleX(-1)"></span>
+          </div>
+        </div>
+
+        <!-- LAYER 5: DELIVERY & DASHBOARDS -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Delivery &amp; Dashboards</div>
+            <div class="l2">Visibility &amp; client-facing UI</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-delivery">
+              <div class="ab-title">Notification Agent <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Slack, Teams, Email delivery</div>
+            </div>
+            <div class="arch-box layer-delivery">
+              <div class="ab-title">Streamlit Dashboard <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Worker status, KRA scores, action log</div>
+            </div>
+            <div class="arch-box layer-delivery">
+              <div class="ab-title">DPI Scoreboard v2 <span class="ab-badge wip">Building</span></div>
+              <div class="ab-sub">7-dimension interactive scoring</div>
+            </div>
+            <div class="arch-box layer-delivery">
+              <div class="ab-title">Next.js Full Dashboard <span class="ab-badge next">M7+</span></div>
+              <div class="ab-sub">Real-time streaming, multi-client</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flow arrow -->
+        <div class="arch-flow-row">
+          <div class="arrow">
+            <span class="arrow-line"></span>
+            All layers run on shared infrastructure
+            <span class="arrow-line" style="transform:scaleX(-1)"></span>
+          </div>
+        </div>
+
+        <!-- LAYER 6: INFRASTRUCTURE -->
+        <div class="arch-layer">
+          <div class="arch-layer-label">
+            <div class="l1">Infrastructure</div>
+            <div class="l2">AWS foundation</div>
+          </div>
+          <div class="arch-layer-content">
+            <div class="arch-box layer-infra">
+              <div class="ab-title">AWS eu-central-1 <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">VPC, IAM, RDS, EC2, S3</div>
+            </div>
+            <div class="arch-box layer-infra">
+              <div class="ab-title">Postgres + Audit <span class="ab-badge done">Done</span></div>
+              <div class="ab-sub">Memory, persistence, audit trail</div>
+            </div>
+            <div class="arch-box layer-infra">
+              <div class="ab-title">GPU (g5.2xlarge) <span class="ab-badge wip">Setting up</span></div>
+              <div class="ab-sub">Ollama on EC2, air-gapped VPC</div>
+            </div>
+            <div class="arch-box layer-infra">
+              <div class="ab-title">n8n Orchestrator <span class="ab-badge wip">Integrating</span></div>
+              <div class="ab-sub">Deterministic workflow glue</div>
+            </div>
+            <div class="arch-box layer-infra">
+              <div class="ab-title">Multi-cloud <span class="ab-badge next">M7+</span></div>
+              <div class="ab-sub">Azure / GCP extension</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /arch-layers -->
+
+      <!-- Legend -->
+      <div class="arch-legend">
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--teal)"></span>Ticket Intake</div>
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--gold)"></span>Chandra Core</div>
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--purple)"></span>Local LLM</div>
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--blue)"></span>Agents &amp; Workers</div>
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--green)"></span>Delivery &amp; Dashboards</div>
+        <div class="arch-legend-item"><span class="swatch" style="background:var(--pink)"></span>Infrastructure</div>
+      </div>
     </div>
   </div>
 </section>
@@ -221,7 +505,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
           <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
         </div>
         <div class="tl-row">
-          <div class="label"><span class="status-dot in-progress"></span>Ollama on EC2 (Prod)<span class="sub">Gemma/DeepSeek air-gapped deployment</span></div>
+          <div class="label"><span class="status-dot in-progress"></span>Ollama on EC2 (Prod)<span class="sub">Llama/Qwen air-gapped deployment</span></div>
           <div class="bar-wrap"><div class="bar done" style="left:0%;width:16.66%;grid-column:span 2">M1-M2</div><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
         </div>
         <div class="tl-row">
@@ -289,7 +573,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
           <div class="bar-wrap"><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
         </div>
         <div class="tl-row">
-          <div class="label"><span class="status-dot in-progress"></span>HR Agents (Ops + Recruit)<span class="sub">Internal proof for Sai</span></div>
+          <div class="label"><span class="status-dot in-progress"></span>HR Agents (ATS + Scorer)<span class="sub">Internal proof for Sai</span></div>
           <div class="bar-wrap"><div class="bar in-progress" style="left:16.66%;width:25%;grid-column:span 3">M3-M5</div></div>
         </div>
         <div class="tl-row">
@@ -331,7 +615,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
           <div class="bar-wrap"><div class="bar done" style="left:0%;width:25%;grid-column:span 3">M1-M3</div></div>
         </div>
         <div class="tl-row">
-          <div class="label"><span class="status-dot in-progress"></span>DPI Scoreboard v2<span class="sub">3-tab interactive: Scores / Config / Formula</span></div>
+          <div class="label"><span class="status-dot in-progress"></span>DPI Scoreboard v2<span class="sub">7-dimension interactive: Scores / Config / Formula</span></div>
           <div class="bar-wrap"><div class="bar in-progress" style="left:25%;width:25%;grid-column:span 3">M4-M6</div></div>
         </div>
         <div class="tl-row">
@@ -417,7 +701,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
         <h3>Production</h3>
         <ul>
           <li>SIM Activation Agent (Smart EU)</li>
-          <li>HR Agents (internal proof)</li>
+          <li>HR Agents (ATS + Scorer)</li>
           <li>Ollama production hardening</li>
           <li>RCA Agent + Automation Executor</li>
           <li>HITL approval gates</li>
@@ -465,7 +749,7 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
       <div class="txt">Where we are standing</div>
     </div>
     <div class="wws-body">
-      <b>Month 3 of 12 — Foundation is built.</b> Chandra's core pipeline (LangGraph + 5 KRA detectors + AWS tool set + local LLM) is shipping. Smart Europe is scoped, SIM Activation is in build, HR agents are being constructed as internal proof. The 30% automation target for the Sunday pitch is on track.
+      <b>Month 3 of 12 — Foundation is built.</b> Chandra's core pipeline (LangGraph + 5 KRA detectors + AWS tool set + local LLM) is shipping. Smart Europe is scoped, SIM Activation is in build, HR agents are being constructed as internal proof. The 30% automation target for the Smart pitch is on track.
       <br><br>
       <span class="stat"><span class="num">12</span> components done</span>
       <span class="stat"><span class="num" style="color:var(--amber)">8</span> in progress</span>
