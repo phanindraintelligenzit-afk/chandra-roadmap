@@ -217,23 +217,53 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
   <div class="brand">INTELLIGENZ<b>IT</b> <span style="color:var(--faint);font-weight:400;margin-left:8px">/ chandra canvas</span></div>
   <div class="links">
     <a onclick="document.getElementById('architecture').scrollIntoView({behavior:'smooth'})">Architecture</a>
+    <a onclick="document.getElementById('portfolio').scrollIntoView({behavior:'smooth'})">Portfolio</a>
+    <a onclick="document.getElementById('bonus-review').scrollIntoView({behavior:'smooth'})">Bonus review</a>
     <a onclick="document.getElementById('timeline').scrollIntoView({behavior:'smooth'})">Timeline</a>
     <a onclick="document.getElementById('phases').scrollIntoView({behavior:'smooth'})">Phases</a>
     <a onclick="document.getElementById('standing').scrollIntoView({behavior:'smooth'})">Where we are</a>
   </div>
-  <div class="badge">Jul 22, 2026</div>
+  <div class="badge">Aug 2, 2026 · M3/Q1 REVIEW</div>
 </nav>
 
 <section class="hero">
   <div class="wrap">
     <div class="eyebrow">Strategic Canvas / Architecture + Roadmap</div>
-    <h1>Chandra — <span class="hl">architecture</span> &amp; <span class="hl">deployment timeline</span></h1>
-    <p class="sub">How the system is built, how components connect, and when each one delivers value. The full picture for PVR: architecture today + roadmap ahead.</p>
+    <h1>IntelligenzIT — <span class="hl">delivery portfolio</span> &amp; <span class="hl">M3/Q1 review</span></h1>
+    <p class="sub">A visual record of the Chandra foundation, expanded Smart Europe, DPI, EID Parry and HR workstreams, and the current basis for quarterly KPI review.</p>
     <div class="meta">
-      <div class="lg"><span class="sw" style="background:var(--green)"></span>Done (M1-M3)</div>
-      <div class="lg"><span class="sw" style="background:var(--amber)"></span>In progress (M4-M6)</div>
+      <div class="lg"><span class="sw" style="background:var(--green)"></span>Delivered / demonstrated</div>
+      <div class="lg"><span class="sw" style="background:var(--amber)"></span>In progress / validation</div>
       <div class="lg"><span class="sw" style="background:var(--blue)"></span>Next quarter (M7-M9)</div>
       <div class="lg"><span class="sw" style="background:var(--grey)"></span>Planned (M10+)</div>
+    </div>
+  </div>
+</section>
+
+<section class="where-we-stand" id="bonus-review" style="margin-top:24px">
+  <div class="wrap" style="width:100%">
+    <div class="wws-head"><div class="big">₹1.25L</div><div class="txt">Quarterly incentive review</div></div>
+    <div class="wws-body">
+      <b>Purpose of this canvas:</b> provide a fast visual basis for the M3/Q1 KPI review and confirmation of the quarterly performance bonus, separate from salary.
+      <br><br>
+      <span class="stat"><span class="num">4</span> primary client/product workstreams</span>
+      <span class="stat"><span class="num">2+</span> additional agent initiatives</span>
+      <span class="stat"><span class="num">1</span> consolidated review</span>
+      <br><br>
+      <span style="color:var(--gold);font-weight:500">Decision requested:</span> confirm the M3/Q1 assessment, identify any disputed KPI item, and confirm approval/payment timing for the ₹1.25 lakh quarterly incentive.
+    </div>
+  </div>
+</section>
+
+<section id="portfolio" style="padding:28px 0">
+  <div class="wrap">
+    <h2>Portfolio delivered during the review period</h2>
+    <p class="section-sub">The original Chandra roadmap remains useful, but this portfolio view is the current bonus-review context.</p>
+    <div class="phases-grid">
+      <div class="phase-card p0"><div class="pc-head"><div class="pc-phase">01</div><div class="pc-date">Delivered</div></div><h3>Chandra</h3><ul><li>AWS + Claude/Bedrock path demonstrated</li><li>Local/private LLM migration in validation</li><li>LangGraph, 5 KRAs, AWS tooling, HITL</li></ul></div>
+      <div class="phase-card p1"><div class="pc-head"><div class="pc-phase">02</div><div class="pc-date">Demo / build</div></div><h3>Smart Europe</h3><ul><li>Satya/Hido workstream</li><li>SIM Activation and Car Decoupling</li><li>n8n deterministic integration design</li></ul></div>
+      <div class="phase-card p2"><div class="pc-head"><div class="pc-phase">03</div><div class="pc-date">Framework / eval</div></div><h3>Regeneron DPI</h3><ul><li>Performance Index and scoreboard</li><li>7-dimension evaluation direction</li><li>Calibration and real-data closure tracked</li></ul></div>
+      <div class="phase-card p3"><div class="pc-head"><div class="pc-phase">04</div><div class="pc-date">Demo completed</div></div><h3>EID Parry</h3><ul><li>Email classification agent</li><li>LangGraph + Claude workflow</li><li>Demo completed; deployment status to confirm</li></ul></div>
     </div>
   </div>
 </section>
@@ -749,14 +779,14 @@ footer{padding:40px 0;border-top:1px solid var(--line);display:flex;justify-cont
       <div class="txt">Where we are standing</div>
     </div>
     <div class="wws-body">
-      <b>Month 3 of 12 — Foundation is built.</b> Chandra's core pipeline (LangGraph + 5 KRA detectors + AWS tool set + local LLM) is shipping. Smart Europe is scoped, SIM Activation is in build, HR agents are being constructed as internal proof. The 30% automation target for the Smart pitch is on track.
+      <b>M3/Q1 review — foundation delivered and scope expanded.</b> Chandra's AWS + Claude/Bedrock path was demonstrated, with local/private LLM work now in validation. Smart Europe, DPI, EID Parry and HR workstreams expanded the delivery scope beyond the original Chandra-only assumptions.
       <br><br>
       <span class="stat"><span class="num">12</span> components done</span>
       <span class="stat"><span class="num" style="color:var(--amber)">8</span> in progress</span>
       <span class="stat"><span class="num" style="color:var(--blue)">7</span> next quarter</span>
       <span class="stat"><span class="num" style="color:var(--grey)">6</span> planned</span>
       <br><br>
-      <span style="color:var(--gold);font-weight:500">Immediate focus (M4-M6):</span> SIM Activation Agent → Smart Europe delivery → DPI Scoreboard v2 → Ollama production → HR Agents proof for Sai.
+      <span style="color:var(--gold);font-weight:500">Review focus:</span> confirm delivered M3/Q1 outcomes, record any disputed KPI item, and confirm the separate ₹1.25 lakh quarterly incentive and payment timing.
     </div>
   </div>
 </section>
